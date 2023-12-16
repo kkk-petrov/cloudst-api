@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "File" ALTER COLUMN "buffer" SET NOT NULL,
+ALTER COLUMN "buffer" SET DATA TYPE TEXT;
