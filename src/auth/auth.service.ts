@@ -20,8 +20,8 @@ export class AuthService {
       email: userData.email,
       name: userData.name,
       password: passwordHash,
-      isAdmin: userData.isAdmin,
-      activationLink: link
+      activationLink: link,
+      avatar: userData.avatar,
     })
     if (!user) {
       throw new BadRequestException
@@ -31,7 +31,7 @@ export class AuthService {
     return { user, token }
   }
 
-  public async login(@Body() userData: LoginUserDto): Promise<string> {
+  public async login(@Body() userData: LoginUserDto) {
     const user = await this.userService.findUnique({ email: userData.email })
     if (!user) {
       throw new UnauthorizedException
@@ -42,10 +42,12 @@ export class AuthService {
       throw new UnauthorizedException
     }
 
-    return this.generateToken(user)
+    const token = await this.generateToken(user)
+    console.log(token, user)
+    return { user, token }
   }
 
   private async generateToken(userData: User): Promise<string> {
-    return this.jwt.signAsync({ id: userData.id, isAdmin: userData.isAdmin })
+    return this.jwt.signAsync({ id: userData.id }, { secret: process.env.JWTKEY });
   }
 }

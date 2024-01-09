@@ -22,9 +22,8 @@ export class CreateUserDto {
   readonly password: string;
 
   @ApiProperty({
-    type: Boolean,
-    required: false,
-    default: false
+    type: String,
+    default: ""
   })
-  readonly isAdmin?: boolean;
+  readonly avatar: string;
 }

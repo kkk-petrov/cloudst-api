@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -15,7 +15,8 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() data: LoginUserDto): Promise<string> {
+  @HttpCode(200)
+  async login(@Body() data: LoginUserDto) {
     return this.authService.login(data)
   }
 }

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudst-api
+spec: 
+  selector:
+    matchLabels:
+      app: cloudst-api
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: cloudst-api
+    spec:
+      containers:
+        - name: cloudst-api
+          image: kkkpetrov/cloudst_api
+          ports:
+            - containerPort: 6969 
