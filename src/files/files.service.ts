@@ -1,53 +1,79 @@
-import { Injectable } from '@nestjs/common';
-import { File, Prisma } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
-import { randomUUID } from 'crypto';
+import { Injectable } from "@nestjs/common";
+import { File, Prisma } from "@prisma/client";
+import { PrismaService } from "../prisma.service";
+import { randomUUID } from "crypto";
+
+interface FileModel extends Express.Multer.File {
+	type: string;
+	name: string;
+}
 
 @Injectable()
 export class FilesService {
-  constructor(private prisma: PrismaService) { }
+	constructor(private prisma: PrismaService) {}
 
-  async create(data: Express.Multer.File, userId: number): Promise<File> {
-    return this.prisma.file.create({
-      data: {
-        type: data.mimetype,
-        originalName: data.originalname,
-        size: data.size,
-        name: randomUUID(),
-        ownerId: userId,
-      }
-    });
-  }
+	async create(files: Array<Express.Multer.File>, userId: number) {
+		const createdFiles = [];
 
+		// for (let i = 0; i < files.length; i++) {
+		// 	const file = files[i];
+		//
+		// 	const createdFile = await this.prisma.file.create({
+		// 		data: {
+		// 			type: file.mimetype,
+		// 			originalName: file.originalname,
+		// 			size: file.size,
+		// 			name: randomUUID(),
+		// 			ownerId: userId,
+		// 		},
+		// 	});
+		//
+		// 	createdFiles.push(createdFile);
+		// }
 
-  // TODO: ...
-  async findUnique(
-    fileWhereUniqueInput: Prisma.FileWhereUniqueInput,
-  ): Promise<File | null> {
-    return await this.prisma.file.findUnique({
-      where: fileWhereUniqueInput,
-    });
-  }
+		return createdFiles;
+	}
 
-  // TODO: ...
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.FileWhereUniqueInput;
-    where?: Prisma.FileWhereInput;
-    orderBy?: Prisma.FileOrderByWithRelationInput;
-  }): Promise<File[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.file.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
-  }
+	async createOne(file: Express.Multer.File, userId: number) {
+		return this.prisma.file.create({
+			data: {
+				type: file.mimetype,
+				originalName: file.originalname,
+				size: file.size,
+				name: randomUUID(),
+				ownerId: userId,
+			},
+		});
+	}
 
-  delete(ids: string, userId: number) {
-    return this.prisma.softDelete(ids, userId)
-  }
+	// TODO: ...
+	async findUnique(
+		fileWhereUniqueInput: Prisma.FileWhereUniqueInput,
+	): Promise<File | null> {
+		return await this.prisma.file.findUnique({
+			where: fileWhereUniqueInput,
+		});
+	}
+
+	// TODO: ...
+	async findAll(params: {
+		skip?: number;
+		take?: number;
+		cursor?: Prisma.FileWhereUniqueInput;
+		where?: Prisma.FileWhereInput;
+		orderBy?: Prisma.FileOrderByWithRelationInput;
+	}): Promise<File[]> {
+		const { skip, take, cursor, where, orderBy } = params;
+		return this.prisma.file.findMany({
+			skip,
+			take,
+			cursor,
+			where,
+			orderBy,
+		});
+	}
+
+	delete(ids: string, userId: number) {
+		return this.prisma.softDelete(ids, userId);
+	}
 }

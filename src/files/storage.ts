@@ -1,18 +1,19 @@
-import { diskStorage } from 'multer';
+import { diskStorage } from "multer";
+import path from "path";
 
 const generateId = () =>
-  Array(18)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 16).toString(16))
-    .join('');
+	Array(18)
+		.fill(null)
+		.map(() => Math.round(Math.random() * 16).toString(16))
+		.join("");
 
 const normalizeFileName = (req, file, callback) => {
-  const fileExtName = file.originalname.split('.').pop();
+	const fileExtName = file.originalname.split(".").pop();
 
-  callback(null, `${generateId()}.${fileExtName}`);
+	callback(null, `${generateId()}.${fileExtName}`);
 };
 
 export const fileStorage = diskStorage({
-  destination: './uploads',
-  filename: normalizeFileName,
+	destination: path.resolve(__dirname, "uploads"),
+	filename: normalizeFileName,
 });
