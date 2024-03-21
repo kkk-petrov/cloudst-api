@@ -10,6 +10,7 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() data: CreateUserDto): Promise<User> {
+    console.log(data)
     const { user } = await this.authService.register(data)
     return user
   }
@@ -17,6 +18,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   async login(@Body() data: LoginUserDto) {
+    console.log(data)
     return this.authService.login(data)
   }
 }

@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, Post, Query, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { CreateFileDto, CreateFilesDto } from './dto/create-file.dto';
 import { fileStorage } from './storage';
@@ -18,11 +18,9 @@ interface FileModel extends Express.Multer.File {
 export class FilesController {
   constructor(private readonly filesService: FilesService) { }
 
-
   @Post('/upload')
   @UseInterceptors(
-    AnyFilesInterceptor(),
-    FilesInterceptor('files[]', 10, {
+    FilesInterceptor('file', 10, {
       storage: fileStorage,
     }),
   )
@@ -32,9 +30,9 @@ export class FilesController {
     type: CreateFilesDto,
   })
   async uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>, @UserId() userId: number) {
-    console.log(files, userId)
+    console.log(files, "asda")
 
-    // return this.filesService.create(files, userId);
+    return this.filesService.create(files, userId);
   }
 
   @Post('/uploadOne')
@@ -49,8 +47,7 @@ export class FilesController {
     type: CreateFileDto,
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File, @UserId() userId: number) {
-    console.log(file, userId)
-    // return this.filesService.create(file, userId)
+    return this.filesService.createOne(file, userId)
   }
 
   @Get('')

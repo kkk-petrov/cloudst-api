@@ -1,0 +1,8 @@
+GET http://localhost:6969/users/1
+Authorization: {{TOKEN}}
+
+###
+
+
+GET http://localhost:6969/users/
+Authorization: {{TOKEN}}
