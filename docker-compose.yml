@@ -13,15 +13,15 @@ services:
       - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data/
-
-  app:
-    build:
-      context: .
-      target: prod
-    ports:
-      - "6969:6969"
-    depends_on:
-      - db
+  #
+  # app:
+  #   build:
+  #     context: .
+  #     target: prod
+  #   ports:
+  #     - "6969:6969"
+  #   depends_on:
+  #     - db
 
 volumes:
   db:

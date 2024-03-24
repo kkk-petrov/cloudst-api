@@ -1,16 +1,18 @@
+import { randomUUID } from "node:crypto";
+import type { CreateUserDto } from "@/user/dto/create-user.dto";
+import type { LoginUserDto } from "@/user/dto/login-user.dto";
+// biome-ignore lint/style/useImportType: used not as a type
+import { UserService } from "@/user/user.service";
 import {
 	BadRequestException,
 	Body,
 	Injectable,
 	UnauthorizedException,
 } from "@nestjs/common";
+// biome-ignore lint/style/useImportType: used not as a type
 import { JwtService } from "@nestjs/jwt";
+import type { User } from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import { UserService } from "../user/user.service";
-import { CreateUserDto } from "../user/dto/create-user.dto";
-import { randomUUID } from "crypto";
-import { User } from "@prisma/client";
-import { LoginUserDto } from "../user/dto/login-user.dto";
 
 interface TokenPair {
 	accessToken: string;
@@ -39,7 +41,7 @@ export class AuthService {
 			throw new BadRequestException();
 		}
 
-		const token = this.generateToken(user);
+		const token = this.generateTokens(user);
 		return { user, token };
 	}
 
@@ -54,21 +56,24 @@ export class AuthService {
 			throw new UnauthorizedException();
 		}
 
-		const token = await this.generateToken(user);
-		console.log(token, user);
-		return { user, token };
+		const tokenPair = await this.generateTokens(user);
+		console.log(tokenPair, user);
+
+		return { user, tokenPair };
 	}
 
-	private async generateToken(userData: User): Promise<TokenPair> {
-		const accessToken = this.jwt.signAsync(
+	private async generateTokens(userData: User): Promise<TokenPair> {
+		const accessToken = await this.jwt.signAsync(
 			{ id: userData.id },
-			{ expiresIn: "1d", secret: process.env.JWTKEY },
+			{ expiresIn: "1h", secret: process.env.JWTKEY },
 		);
-		const refreshToken = this.jwt.signAsync(
+		const refreshToken = await this.jwt.signAsync(
 			{ id: userData.id },
 			{ expiresIn: "30d", secret: process.env.JWTKEY },
 		);
 
 		return { accessToken, refreshToken };
 	}
+
+	public async refresh() {}
 }

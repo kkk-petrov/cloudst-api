@@ -1,7 +1,2 @@
-POST http://localhost:2280/files/upload
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjZ9.5VEC1Eg4vmx7VkJ6oY13uB7F5k0I5A1k4Xzgc6QvLmE
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-
-< ./1.png
-
-###
+POST http://localhost:6969/files/uploadOne
+Authorization: {{TOKEN}} 

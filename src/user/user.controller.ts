@@ -1,29 +1,30 @@
-import { Controller, Body, Get, Param, Delete, UseGuards } from '@nestjs/common';
-import { UserService } from './user.service';
-import { AuthGuard } from '../auth/auth.guard';
+import { Controller, Delete, Get, Param, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "@/auth/auth.guard";
+// biome-ignore lint/style/useImportType: used not as a type
+import { UserService } from "@/user/user.service";
 
 @UseGuards(AuthGuard)
-@Controller('users')
+@Controller("users")
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+	constructor(private readonly userService: UserService) {}
 
-  @Get('/test')
-  async test() {
-    return "Hello World";
-  }
+	@Get("/test")
+	async test() {
+		return "Hello World";
+	}
 
-  @Get('')
-  async getAll() {
-    return this.userService.findAll({});
-  }
+	@Get("")
+	async getAll() {
+		return this.userService.findAll({});
+	}
 
-  @Get('/:id')
-  async getOneByID(@Param('id') id: string) {
-    return await this.userService.findUnique({ id: parseInt(id) })
-  }
+	@Get("/:id")
+	async getOneByID(@Param("id") id: string) {
+		return await this.userService.findUnique({ id: Number.parseInt(id) });
+	}
 
-  @Delete('/:id')
-  async deleteUser(@Param('id') id: string) {
-    return await this.userService.delete({ id: parseInt(id) })
-  }
+	@Delete("/:id")
+	async deleteUser(@Param("id") id: string) {
+		return await this.userService.delete({ id: Number.parseInt(id) });
+	}
 }
